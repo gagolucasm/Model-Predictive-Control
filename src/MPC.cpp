@@ -59,12 +59,15 @@ public:
             fg[0] += 800 * CppAD::pow(vars[epsi_start + i], 2);
             fg[0] += 10 * CppAD::pow(vars[v_start + i] - ref_v, 2);
         }
+         // Minimize the use of actuators.
 
         for (int i = 0; i < N - 1; i++) {
             fg[0] += 1000 * CppAD::pow(vars[delta_start + i], 2);
             fg[0] += 1000 * CppAD::pow(vars[a_start + i], 2);
 
         }
+        
+         // Minimize the value gap between sequential actuations.
 
         for (int i = 0; i < N - 2; i++) {
             fg[0] += 600 * CppAD::pow(vars[delta_start + i + 1] - vars[delta_start + i], 2);
@@ -78,9 +81,7 @@ public:
 
         // Initial constraints
         //
-        // We add 1 to each of the starting indices due to cost being located at
-        // index 0 of `fg`.
-        // This bumps up the position of all the other values.
+
         fg[1 + x_start] = vars[x_start];
         fg[1 + y_start] = vars[y_start];
         fg[1 + psi_start] = vars[psi_start];
